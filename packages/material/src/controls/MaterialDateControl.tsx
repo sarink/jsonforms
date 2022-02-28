@@ -81,8 +81,8 @@ export const MaterialDateControl = (props: ControlProps)=> {
   ),[path, handleChange, saveFormat]);
 
   return (
-    <Hidden xsUp={!visible} {...appliedUiSchemaOptions.materialui?.HiddenProps}>
-      <LocalizationProvider dateAdapter={AdapterDayjs} {...appliedUiSchemaOptions.materialui?.LocalizationProviderProps}>
+    <Hidden xsUp={!visible} {...appliedUiSchemaOptions.material?.HiddenProps}>
+      <LocalizationProvider dateAdapter={AdapterDayjs} {...appliedUiSchemaOptions.material?.LocalizationProviderProps}>
         <DatePicker
           label={label}
           value={getData(data, saveFormat)}
@@ -113,10 +113,10 @@ export const MaterialDateControl = (props: ControlProps)=> {
           )}
           {...appliedUiSchemaOptions.mui?.DatePickerProps}
         />
-        <FormHelperText error={!isValid && !showDescription} {...appliedUiSchemaOptions.materialui?.FormHelperTextProps}>
+        <FormHelperText error={!isValid && !showDescription} {...appliedUiSchemaOptions.material?.FormHelperTextProps}>
           {firstFormHelperText}
         </FormHelperText>
-        <FormHelperText error={!isValid} {...appliedUiSchemaOptions.materialui?.FormHelperTextProps}>
+        <FormHelperText error={!isValid} {...appliedUiSchemaOptions.material?.FormHelperTextProps}>
           {secondFormHelperText}
         </FormHelperText>
       </LocalizationProvider>
