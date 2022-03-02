@@ -48,9 +48,7 @@ import {
 import MomentUtils from '@date-io/moment';
 
 // Workaround typing problems in @material-ui/pickers@3.2.3
-const AnyPropsKeyboardDateTimepicker: React.FunctionComponent<
-  any
-> = KeyboardDateTimePicker;
+const AnyPropsKeyboardDateTimepicker: React.FunctionComponent<any> = KeyboardDateTimePicker;
 
 export class MaterialDateTimeControl extends Control<
   ControlProps,
