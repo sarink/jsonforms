@@ -27,6 +27,7 @@ import {
   computeLabel,
   ControlProps,
   ControlState,
+  getAppliedUiSchemaOptions,
   isDateControl,
   isDescriptionHidden,
   isPlainLabel,
@@ -38,7 +39,6 @@ import {
 import { Hidden } from '@material-ui/core';
 import { Control, withJsonFormsControlProps } from '@jsonforms/react';
 import TextField from '@material-ui/core/TextField';
-import merge from 'lodash/merge';
 
 export class MaterialNativeControl extends Control<ControlProps, ControlState> {
   render() {
@@ -47,6 +47,7 @@ export class MaterialNativeControl extends Control<ControlProps, ControlState> {
       errors,
       label,
       schema,
+      uischema,
       description,
       enabled,
       visible,
@@ -57,11 +58,10 @@ export class MaterialNativeControl extends Control<ControlProps, ControlState> {
       config
     } = this.props;
     const isValid = errors.length === 0;
-    const appliedUiSchemaOptions = merge(
-      {},
+    const appliedUiSchemaOptions = getAppliedUiSchemaOptions({
       config,
-      this.props.uischema.options
-    );
+      uischema
+    });
     const onChange = (ev: any) => handleChange(path, ev.target.value);
     const fieldType = schema.format;
     const showDescription = !isDescriptionHidden(
@@ -72,7 +72,7 @@ export class MaterialNativeControl extends Control<ControlProps, ControlState> {
     );
 
     return (
-      <Hidden xsUp={!visible}>
+      <Hidden xsUp={!visible} {...appliedUiSchemaOptions.material?.HiddenProps}>
         <TextField
           id={id + '-input'}
           label={computeLabel(
@@ -90,6 +90,7 @@ export class MaterialNativeControl extends Control<ControlProps, ControlState> {
           InputLabelProps={{ shrink: true }}
           value={data}
           onChange={onChange}
+          {...appliedUiSchemaOptions.material?.TextFieldProps}
         />
       </Hidden>
     );
