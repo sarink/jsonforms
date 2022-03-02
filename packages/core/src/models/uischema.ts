@@ -23,6 +23,7 @@
   THE SOFTWARE.
 */
 import { JsonSchema } from './jsonSchema';
+import { UISchemaOptionsMaterial } from './uischemaOptionsMaterial';
 
 /**
  * Interface for describing an UI schema element that is referencing
@@ -137,7 +138,10 @@ export interface UISchemaElement {
   /**
    * Any additional options.
    */
-  options?: { [key: string]: any };
+  options?: {
+    [key: string]: any;
+    material?: UISchemaOptionsMaterial;
+  };
 }
 
 /**
