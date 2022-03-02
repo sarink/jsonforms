@@ -27,6 +27,7 @@ import {
   computeLabel,
   ControlProps,
   ControlState,
+  getAppliedUiSchemaOptions,
   isDescriptionHidden,
   isPlainLabel
 } from '@jsonforms/core';
@@ -34,7 +35,6 @@ import { Control } from '@jsonforms/react';
 
 import { Hidden, InputLabel } from '@material-ui/core';
 import { FormControl, FormHelperText } from '@material-ui/core';
-import merge from 'lodash/merge';
 
 export interface WithInput {
   input: any;
@@ -57,7 +57,10 @@ export abstract class MaterialInputControl extends Control<
       input
     } = this.props;
     const isValid = errors.length === 0;
-    const appliedUiSchemaOptions = merge({}, config, uischema.options);
+    const appliedUiSchemaOptions = getAppliedUiSchemaOptions({
+      config,
+      uischema
+    });
 
     const showDescription = !isDescriptionHidden(
       visible,
@@ -75,14 +78,19 @@ export abstract class MaterialInputControl extends Control<
     const InnerComponent = input;
 
     return (
-      <Hidden xsUp={!visible}>
+      <Hidden xsUp={!visible} {...appliedUiSchemaOptions.material?.HiddenProps}>
         <FormControl
           fullWidth={!appliedUiSchemaOptions.trim}
           onFocus={this.onFocus}
           onBlur={this.onBlur}
           id={id}
+          {...appliedUiSchemaOptions.material?.FormControlProps}
         >
-          <InputLabel htmlFor={id + '-input'} error={!isValid}>
+          <InputLabel
+            htmlFor={id + '-input'}
+            error={!isValid}
+            {...appliedUiSchemaOptions.material?.InputLabelProps}
+          >
             {computeLabel(
               isPlainLabel(label) ? label : label.default,
               required,
@@ -95,10 +103,16 @@ export abstract class MaterialInputControl extends Control<
             isValid={isValid}
             visible={visible}
           />
-          <FormHelperText error={!isValid && !showDescription}>
+          <FormHelperText
+            error={!isValid && !showDescription}
+            {...appliedUiSchemaOptions.material?.FormHelperTextProps}
+          >
             {firstFormHelperText}
           </FormHelperText>
-          <FormHelperText error={!isValid}>
+          <FormHelperText
+            error={!isValid}
+            {...appliedUiSchemaOptions.material?.FormHelperTextProps}
+          >
             {secondFormHelperText}
           </FormHelperText>
         </FormControl>
