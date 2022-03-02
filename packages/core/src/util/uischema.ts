@@ -22,8 +22,10 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
 */
+import { merge } from 'lodash';
 import isEmpty from 'lodash/isEmpty';
 import { isLayout, UISchemaElement } from '../models/uischema';
+import { StatePropsOfRenderer } from './renderer';
 
 export type IterateCallback = (uischema: UISchemaElement) => void;
 
@@ -54,3 +56,9 @@ export const iterateSchema = (
   }
   toApply(uischema);
 };
+
+export const getAppliedUiSchemaOptions = (args: {
+  config: StatePropsOfRenderer['config'];
+  uischema: Pick<UISchemaElement, 'options'>;
+}): Exclude<UISchemaElement['options'], undefined> =>
+  merge({}, args.config, args.uischema.options);
