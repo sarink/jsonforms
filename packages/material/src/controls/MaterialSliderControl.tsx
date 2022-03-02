@@ -27,6 +27,7 @@ import {
   computeLabel,
   ControlProps,
   ControlState,
+  getAppliedUiSchemaOptions,
   isDescriptionHidden,
   isPlainLabel,
   isRangeControl,
@@ -42,7 +43,6 @@ import {
   Slider,
   Typography
 } from '@material-ui/core';
-import merge from 'lodash/merge';
 
 export class MaterialSliderControl extends Control<ControlProps, ControlState> {
   render() {
@@ -53,6 +53,7 @@ export class MaterialSliderControl extends Control<ControlProps, ControlState> {
       enabled,
       errors,
       label,
+      uischema,
       schema,
       handleChange,
       visible,
@@ -61,11 +62,10 @@ export class MaterialSliderControl extends Control<ControlProps, ControlState> {
       config
     } = this.props;
     const isValid = errors.length === 0;
-    const appliedUiSchemaOptions = merge(
-      {},
+    const appliedUiSchemaOptions = getAppliedUiSchemaOptions({
       config,
-      this.props.uischema.options
-    );
+      uischema
+    });
     const labelStyle: { [x: string]: any } = {
       whiteSpace: 'nowrap',
       overflow: 'hidden',
@@ -89,14 +89,20 @@ export class MaterialSliderControl extends Control<ControlProps, ControlState> {
       appliedUiSchemaOptions.showUnfocusedDescription
     );
     return (
-      <Hidden xsUp={!visible}>
+      <Hidden xsUp={!visible} {...appliedUiSchemaOptions.material?.HiddenProps}>
         <FormControl
           fullWidth={!appliedUiSchemaOptions.trim}
           onFocus={this.onFocus}
           onBlur={this.onBlur}
           id={id}
+          {...appliedUiSchemaOptions.material?.FormControlProps}
         >
-          <Typography id={id + '-typo'} style={labelStyle} variant='caption'>
+          <Typography
+            id={id + '-typo'}
+            style={labelStyle}
+            variant='caption'
+            {...appliedUiSchemaOptions.material?.TypographyProps}
+          >
             {computeLabel(
               isPlainLabel(label) ? label : label.default,
               required,
@@ -104,10 +110,20 @@ export class MaterialSliderControl extends Control<ControlProps, ControlState> {
             )}
           </Typography>
           <div style={rangeContainerStyle}>
-            <Typography style={rangeItemStyle} variant='caption' align='left'>
+            <Typography
+              style={rangeItemStyle}
+              variant='caption'
+              align='left'
+              {...appliedUiSchemaOptions.material?.TypographyProps}
+            >
               {schema.minimum}
             </Typography>
-            <Typography style={rangeItemStyle} variant='caption' align='right'>
+            <Typography
+              style={rangeItemStyle}
+              variant='caption'
+              align='right'
+              {...appliedUiSchemaOptions.material?.TypographyProps}
+            >
               {schema.maximum}
             </Typography>
           </div>
@@ -122,8 +138,12 @@ export class MaterialSliderControl extends Control<ControlProps, ControlState> {
             id={id + '-input'}
             disabled={!enabled}
             step={schema.multipleOf || 1}
+            {...appliedUiSchemaOptions.material?.SliderProps}
           />
-          <FormHelperText error={!isValid}>
+          <FormHelperText
+            error={!isValid}
+            {...appliedUiSchemaOptions.material?.FormHelperTextProps}
+          >
             {!isValid ? errors : showDescription ? description : null}
           </FormHelperText>
         </FormControl>
