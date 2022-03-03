@@ -23,11 +23,11 @@
   THE SOFTWARE.
 */
 import React from 'react';
-import merge from 'lodash/merge';
 import {
   computeLabel,
   ControlProps,
   ControlState,
+  getAppliedUiSchemaOptions,
   isDateTimeControl,
   isPlainLabel,
   RankedTester,
@@ -48,9 +48,7 @@ import {
 import MomentUtils from '@date-io/moment';
 
 // Workaround typing problems in @material-ui/pickers@3.2.3
-const AnyPropsKeyboardDateTimepicker: React.FunctionComponent<
-  any
-> = KeyboardDateTimePicker;
+const AnyPropsKeyboardDateTimepicker: React.FunctionComponent<any> = KeyboardDateTimePicker;
 
 export class MaterialDateTimeControl extends Control<
   ControlProps,
@@ -71,13 +69,19 @@ export class MaterialDateTimeControl extends Control<
       data,
       config
     } = this.props;
-    const appliedUiSchemaOptions = merge({}, config, uischema.options);
+    const appliedUiSchemaOptions = getAppliedUiSchemaOptions({
+      config,
+      uischema
+    });
     const isValid = errors.length === 0;
     const inputProps = {};
 
     return (
-      <Hidden xsUp={!visible}>
-        <MuiPickersUtilsProvider utils={MomentUtils}>
+      <Hidden xsUp={!visible} {...appliedUiSchemaOptions.material?.HiddenProps}>
+        <MuiPickersUtilsProvider
+          utils={MomentUtils}
+          {...appliedUiSchemaOptions.material?.MuiPickersUtilsProviderProps}
+        >
           <AnyPropsKeyboardDateTimepicker
             id={id + '-input'}
             label={computeLabel(
@@ -105,6 +109,7 @@ export class MaterialDateTimeControl extends Control<
             keyboardIcon={<EventIcon />}
             timeIcon={<AccessTimeIcon />}
             InputProps={inputProps}
+            {...appliedUiSchemaOptions.material?.KeyboardDateTimePickerProps}
           />
         </MuiPickersUtilsProvider>
       </Hidden>

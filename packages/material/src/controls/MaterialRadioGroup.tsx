@@ -22,12 +22,12 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
 */
-import merge from 'lodash/merge';
 import React from 'react';
 import {
   computeLabel,
   ControlProps,
   ControlState,
+  getAppliedUiSchemaOptions,
   isDescriptionHidden,
   isPlainLabel,
   OwnPropsOfEnum
@@ -52,6 +52,7 @@ export class MaterialRadioGroup extends Control<
       config,
       id,
       label,
+      uischema,
       required,
       description,
       errors,
@@ -60,11 +61,10 @@ export class MaterialRadioGroup extends Control<
       options
     } = this.props;
     const isValid = errors.length === 0;
-    const appliedUiSchemaOptions = merge(
-      {},
+    const appliedUiSchemaOptions = getAppliedUiSchemaOptions({
       config,
-      this.props.uischema.options
-    );
+      uischema
+    });
     const showDescription = !isDescriptionHidden(
       visible,
       description,
@@ -73,15 +73,17 @@ export class MaterialRadioGroup extends Control<
     );
 
     return (
-      <Hidden xsUp={!visible}>
+      <Hidden xsUp={!visible} {...appliedUiSchemaOptions.material?.HiddenProps}>
         <FormControl
           component={'fieldset' as 'div'}
           fullWidth={!appliedUiSchemaOptions.trim}
+          {...appliedUiSchemaOptions.material?.FormControlProps}
         >
           <FormLabel
             htmlFor={id}
             error={!isValid}
             component={'legend' as 'label'}
+            {...appliedUiSchemaOptions.material?.FormLabelProps}
           >
             {computeLabel(
               isPlainLabel(label) ? label : label.default,
@@ -95,12 +97,13 @@ export class MaterialRadioGroup extends Control<
             onChange={(_ev, value) => this.handleChange(value)}
             row={true}
           >
-            {options.map(option => (
+            {options?.map(option => (
               <FormControlLabel
                 value={option.value}
                 key={option.label}
                 control={<Radio checked={data === option.value} />}
                 label={option.label}
+                {...appliedUiSchemaOptions.material?.FormControlLabelProps}
               />
             ))}
           </RadioGroup>

@@ -27,6 +27,7 @@ import {
   ControlProps,
   ControlState,
   EnumCellProps,
+  getAppliedUiSchemaOptions,
   JsonSchema,
   RankedTester,
   rankWith,
@@ -37,7 +38,6 @@ import {
 import { Control, withJsonFormsControlProps } from '@jsonforms/react';
 import { Input } from '@material-ui/core';
 import { InputBaseComponentProps } from '@material-ui/core/InputBase';
-import merge from 'lodash/merge';
 import React from 'react';
 import { MaterialInputControl } from './MaterialInputControl';
 
@@ -64,7 +64,10 @@ const MuiAutocompleteInputText = (props: EnumCellProps & WithClassname) => {
   const enumSchema = findEnumSchema(schema.anyOf);
   const stringSchema = findTextSchema(schema.anyOf);
   const maxLength = stringSchema.maxLength;
-  const appliedUiSchemaOptions = merge({}, config, uischema.options);
+  const appliedUiSchemaOptions = getAppliedUiSchemaOptions({
+    config,
+    uischema
+  });
   let inputProps: InputBaseComponentProps = {};
   if (appliedUiSchemaOptions.restrict) {
     inputProps = { maxLength: maxLength };
@@ -95,6 +98,7 @@ const MuiAutocompleteInputText = (props: EnumCellProps & WithClassname) => {
       inputProps={inputProps}
       error={!isValid}
       endAdornment={dataList}
+      {...appliedUiSchemaOptions.material?.InputProps}
     />
   );
 };

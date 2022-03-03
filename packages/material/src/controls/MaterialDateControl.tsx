@@ -23,12 +23,12 @@
   THE SOFTWARE.
 */
 import startsWith from 'lodash/startsWith';
-import merge from 'lodash/merge';
 import React from 'react';
 import {
   computeLabel,
   ControlState,
   DispatchPropsOfControl,
+  getAppliedUiSchemaOptions,
   isDateControl,
   isDescriptionHidden,
   isPlainLabel,
@@ -54,9 +54,7 @@ export interface DateControl {
 }
 
 // Workaround typing problems in @material-ui/pickers@3.2.3
-const AnyPropsKeyboardDatePicker: React.FunctionComponent<
-  any
-> = KeyboardDatePicker;
+const AnyPropsKeyboardDatePicker: React.FunctionComponent<any> = KeyboardDatePicker;
 
 export class MaterialDateControl extends Control<
   StatePropsOfDateControl & DispatchPropsOfControl & DateControl,
@@ -82,7 +80,10 @@ export class MaterialDateControl extends Control<
     const cancelLabel = '%cancel';
     const clearLabel = '%clear';
     const isValid = errors.length === 0;
-    const appliedUiSchemaOptions = merge({}, config, uischema.options);
+    const appliedUiSchemaOptions = getAppliedUiSchemaOptions({
+      config,
+      uischema
+    });
     const showDescription = !isDescriptionHidden(
       visible,
       description,
@@ -109,8 +110,11 @@ export class MaterialDateControl extends Control<
     }
 
     return (
-      <Hidden xsUp={!visible}>
-        <MuiPickersUtilsProvider utils={MomentUtils}>
+      <Hidden xsUp={!visible} {...appliedUiSchemaOptions.material?.HiddenProps}>
+        <MuiPickersUtilsProvider
+          utils={MomentUtils}
+          {...appliedUiSchemaOptions.material?.MuiPickersUtilsProviderProps}
+        >
           <AnyPropsKeyboardDatePicker
             id={id + '-input'}
             label={computeLabel(
@@ -141,6 +145,7 @@ export class MaterialDateControl extends Control<
             rightArrowIcon={<KeyboardArrowRightIcon />}
             keyboardIcon={<EventIcon />}
             InputProps={inputProps}
+            {...appliedUiSchemaOptions.material?.KeyboardDatePickerProps}
           />
         </MuiPickersUtilsProvider>
       </Hidden>

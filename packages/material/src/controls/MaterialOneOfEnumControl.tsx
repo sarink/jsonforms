@@ -28,15 +28,15 @@ import {
   isOneOfEnumControl,
   OwnPropsOfEnum,
   RankedTester,
-  rankWith,
+  rankWith
 } from '@jsonforms/core';
 import { withJsonFormsOneOfEnumProps } from '@jsonforms/react';
 import { MuiSelect } from '../mui-controls/MuiSelect';
 import { MaterialInputControl } from './MaterialInputControl';
 
-export const MaterialOneOfEnumControl = (props: ControlProps & OwnPropsOfEnum) => (
-    <MaterialInputControl {...props} input={MuiSelect} />
-);
+export const MaterialOneOfEnumControl = (
+  props: ControlProps & OwnPropsOfEnum
+) => <MaterialInputControl {...props} input={MuiSelect} />;
 
 export const materialOneOfEnumControlTester: RankedTester = rankWith(
   5,

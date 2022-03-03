@@ -28,7 +28,8 @@ import {
   isBooleanControl,
   RankedTester,
   rankWith,
-  ControlProps
+  ControlProps,
+  getAppliedUiSchemaOptions
 } from '@jsonforms/core';
 import { withJsonFormsControlProps } from '@jsonforms/react';
 import { FormControlLabel, Hidden } from '@material-ui/core';
@@ -48,8 +49,12 @@ export const MaterialBooleanControl = ({
   path,
   config
 }: ControlProps) => {
+  const appliedUiSchemaOptions = getAppliedUiSchemaOptions({
+    config,
+    uischema
+  });
   return (
-    <Hidden xsUp={!visible}>
+    <Hidden xsUp={!visible} {...appliedUiSchemaOptions.material?.HiddenProps}>
       <FormControlLabel
         label={label}
         id={id}
@@ -67,8 +72,10 @@ export const MaterialBooleanControl = ({
             handleChange={handleChange}
             errors={errors}
             config={config}
+            {...appliedUiSchemaOptions.material?.CheckboxProps}
           />
         }
+        {...appliedUiSchemaOptions.material?.FormControlLabelProps}
       />
     </Hidden>
   );
